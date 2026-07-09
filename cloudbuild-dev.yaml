@@ -1,39 +1,24 @@
 steps:
-  # Step 1: Compile the Go Application
+  # Step 1: Compile the Go application
   - name: 'gcr.io/cloud-builders/go'
     env: ['GOPATH=/gopath']
     args: ['build', '-o', 'main', 'main.go']
 
-  # Step 2: Build the Docker image for the Go application
+  # Step 2: Build Docker image
   - name: 'gcr.io/cloud-builders/docker'
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-    args: ['build', '-t', 'us-east1-docker.pkg.dev/qwiklabs-gcp-03-dc947a496bd5/my-repository/hello-cloudbuild-dev:v1.0', '.']
-
-  # Step 3: Push the Docker image to Artifact Registry
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-east1-docker.pkg.dev/qwiklabs-gcp-03-dc947a496bd5/my-repository/hello-cloudbuild-dev:v1.0']
-=======
     args: ['build', '-t', 'us-east1-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild-dev:v1.0', '.']
 
-  # Step 3: Push the Docker image to Artifact Registry
+  # Step 3: Push Docker image
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'us-east1-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild-dev:v1.0']
->>>>>>> a1fcbe4 (Initial sample app commit)
-=======
-    args: ['build', '-t', 'us-east1-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild-dev:v1.0', '.']
 
-  # Step 3: Push the Docker image to Artifact Registry
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-east1-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild-dev:v1.0']
->>>>>>> Stashed changes
-
-  # Step 4: Apply the production deployment YAML file to the production namespace
+  # Step 4: Deploy to dev namespace
   - name: 'gcr.io/cloud-builders/kubectl'
     id: 'Deploy'
     args: ['-n', 'dev', 'apply', '-f', 'dev/deployment.yaml']
     env:
-    - 'CLOUDSDK_COMPUTE_REGION=us-east1-c'
-    - 'CLOUDSDK_CONTAINER_CLUSTER=hello-cluster'
+      - 'CLOUDSDK_COMPUTE_REGION=us-east1-c'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=hello-cluster'
+
 options:
- logging: CLOUD_LOGGING_ONLY
+  logging: CLOUD_LOGGING_ONLY
